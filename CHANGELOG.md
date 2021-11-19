@@ -154,6 +154,12 @@ All notable changes to this project will be documented in this file.
 - Add missing indices [#3754](https://github.com/nextcloud/deck/pull/3754)
 
 
+## 1.6.0-beta2
+
+### Fixed
+
+- #3433 Fix event name for updating the description
+
 ## 1.6.0-beta1
 
 ### Added
