@@ -154,6 +154,11 @@ All notable changes to this project will be documented in this file.
 - Add missing indices [#3754](https://github.com/nextcloud/deck/pull/3754)
 
 
+## 1.6.0-beta3
+
+- #3449 Cache most frequent queries
+- #3446 Switch to QBMapper in BoardMapper
+
 ## 1.6.0-beta2
 
 ### Fixed
