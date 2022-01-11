@@ -100,7 +100,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Nepodarilo sa zapísať súbor na disk",
     "A PHP extension stopped the file upload" : "Rozšírenie PHP zastavilo nahrávanie súboru",
     "No file uploaded or file size exceeds maximum of %s" : "Nenahral sa žiadny súbor alebo jeho veľkosť presiahla %s",
-    "This comment has more than %s characters.\nAdded as an attachment to the card with name %s.\nAccessible on URL: %s." : "Tento komentár má viac než %s znakov.\nPridané ako príloha ku karte s názvom %s.\nDostupné na URL: %s.",
     "Card not found" : "Karta nebola nájdená",
     "Path is already shared with this card" : "Cesta je už zdieľaná s touto kartou",
     "Invalid date, date format must be YYYY-MM-DD" : "Neplatný dátum, formát musí byť v tvare YYYY-MM-DD",
@@ -170,10 +169,8 @@ OC.L10N.register(
     "Can edit" : "Môže upravovať",
     "Can share" : "Môže sprístupniť",
     "Can manage" : "Môže spravovať",
-    "Owner" : "Vlastník",
     "Delete" : "Zmazať",
     "Failed to create share with {displayName}" : "Nepodarilo sa vytvoriť sprístupnenie pre {displayName}",
-    "Transfer" : "Prenos",
     "Add a new list" : "Pridať nový zoznam",
     "Archive all cards" : "Archivovať všetky karty",
     "Delete list" : "Vymazať zoznam",
@@ -243,7 +240,6 @@ OC.L10N.register(
     "Archive card" : "Archivovať kartu",
     "Delete card" : "Zmazať kartu",
     "Move card to another board" : "Presunúť kartu na inú nástenku",
-    "List is empty" : "Zoznam je prázdny",
     "Card deleted" : "Karta bola vymazaná",
     "seconds ago" : "pred niekoľkými sekundami",
     "All boards" : "Všetky nástenky",
@@ -272,6 +268,7 @@ OC.L10N.register(
     "Are you sure you want to delete the board {title}? This will delete all the data of this board." : "Naozaj chcete chcete vymazať nástenku {title}? Toto zmaže všetky údaje o tejto nástenke.",
     "Delete the board?" : "Vymazať nástenku?",
     "Loading filtered view" : "Načítavanie filtrovaného pohľadu",
+    "This week" : "Tento týždeň",
     "No due" : "Žiadny termín dokončenia",
     "Search for {searchQuery} in all boards" : "Vyhľadať {searchQuery} na všetkých plochách",
     "No results found" : "Neboli nájdené žiadne výsledky",
@@ -288,7 +285,6 @@ OC.L10N.register(
     "Share with a Deck card" : "Zdieľať s kartou Deck",
     "Share {file} with a Deck card" : "Zdieľať {file} s kartou Deck",
     "Share" : "Zdieľať",
-    "Deck is a kanban style organization tool aimed at personal planning and project organization for teams integrated with Nextcloud.\n\n\n- 📥 Add your tasks to cards and put them in order\n- 📄 Write down additional notes in markdown\n- 🔖 Assign labels for even better organization\n- 👥 Share with your team, friends or family\n- 📎 Attach files and embed them in your markdown description\n- 💬 Discuss with your team using comments\n- ⚡ Keep track of changes in the activity stream\n- 🚀 Get your project organized" : "Karty sú nástroj zacielený na osobné alebo projektové plánovanie tímov v štýle Kanban integrovaný do Nextcloud.\n\n\n- 📥 Zadávajte a usporadúvajte svoje úlohy do kariet\n- 📄 Zapisujte si dodatočné poznámky\n- 🔖 Priraďujte štítky pre ešte lepšiu organizáciu\n- 👥 Zdieľajte so svojim tímom, priateľmi alebo rodinou\n- 🚀 Dostaňte svoj projekt pod kontrolu",
-    "This week" : "Tento týždeň"
+    "Deck is a kanban style organization tool aimed at personal planning and project organization for teams integrated with Nextcloud.\n\n\n- 📥 Add your tasks to cards and put them in order\n- 📄 Write down additional notes in markdown\n- 🔖 Assign labels for even better organization\n- 👥 Share with your team, friends or family\n- 📎 Attach files and embed them in your markdown description\n- 💬 Discuss with your team using comments\n- ⚡ Keep track of changes in the activity stream\n- 🚀 Get your project organized" : "Karty sú nástroj zacielený na osobné alebo projektové plánovanie tímov v štýle Kanban integrovaný do Nextcloud.\n\n\n- 📥 Zadávajte a usporadúvajte svoje úlohy do kariet\n- 📄 Zapisujte si dodatočné poznámky\n- 🔖 Priraďujte štítky pre ešte lepšiu organizáciu\n- 👥 Zdieľajte so svojim tímom, priateľmi alebo rodinou\n- 🚀 Dostaňte svoj projekt pod kontrolu"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");
