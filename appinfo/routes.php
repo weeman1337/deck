@@ -136,6 +136,8 @@ return [
 		['name' => 'attachment_api_v11#restore', 'url' => '/api/v{apiVersion}/boards/{boardId}/stacks/{stackId}/cards/{cardId}/attachments/{type}/{attachmentId}/restore', 'verb' => 'PUT', 'requirements' => ['apiVersion' => '1.1']],
 
 		['name' => 'board_api#preflighted_cors', 'url' => '/api/v{apiVersion}/{path}','verb' => 'OPTIONS', 'requirements' => ['path' => '.+']],
+
+		['name' => 'print#index', 'url' => '/print', 'verb' => 'GET'],
 	],
 	'ocs' => [
 		['name' => 'Config#get', 'url' => '/api/v{apiVersion}/config', 'verb' => 'GET'],
