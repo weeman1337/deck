@@ -33,6 +33,7 @@ class BoardTest extends TestCase {
 			'users' => ['user1', 'user2'],
 			'settings' => [],
 			'ETag' => $board->getETag(),
+			'category' => null,
 		], $board->jsonSerialize());
 	}
 
@@ -77,6 +78,7 @@ class BoardTest extends TestCase {
 			'users' => [],
 			'settings' => [],
 			'ETag' => $board->getETag(),
+			'category' => null,
 		], $board->jsonSerialize());
 	}
 	public function testSetAcl() {
@@ -106,6 +108,7 @@ class BoardTest extends TestCase {
 			'users' => [],
 			'settings' => [],
 			'ETag' => $board->getETag(),
+			'category' => null,
 		], $board->jsonSerialize());
 	}
 }

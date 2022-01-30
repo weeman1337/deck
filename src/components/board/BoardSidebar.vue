@@ -32,8 +32,16 @@
 			<SharingTabSidebar :board="board" />
 		</NcAppSidebarTab>
 
-		<NcAppSidebarTab id="tags"
+		<NcAppSidebarTab v-if="canEdit"
+			id="board-settings"
 			:order="1"
+			:name="t('deck', 'Settings')"
+			icon="icon-settings">
+			<SettingsTabsSidebar :board="board" />
+		</NcAppSidebarTab>
+
+		<NcAppSidebarTab id="tags"
+			:order="2"
 			:name="t('deck', 'Tags')"
 			icon="icon-tag">
 			<TagsTabSidebar :board="board" />
@@ -41,7 +49,7 @@
 
 		<NcAppSidebarTab v-if="canEdit"
 			id="deleted"
-			:order="2"
+			:order="3"
 			:name="t('deck', 'Deleted items')"
 			icon="icon-delete">
 			<DeletedTabSidebar :board="board" />
@@ -49,7 +57,7 @@
 
 		<NcAppSidebarTab v-if="hasActivity"
 			id="activity"
-			:order="3"
+			:order="4"
 			:name="t('deck', 'Timeline')"
 			icon="icon-activity">
 			<TimelineTabSidebar :board="board" />
@@ -59,6 +67,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import SettingsTabsSidebar from './SettingsTabsSidebar.vue'
 import SharingTabSidebar from './SharingTabSidebar.vue'
 import TagsTabSidebar from './TagsTabSidebar.vue'
 import DeletedTabSidebar from './DeletedTabSidebar.vue'
@@ -72,6 +81,7 @@ export default {
 	components: {
 		NcAppSidebar,
 		NcAppSidebarTab,
+		SettingsTabsSidebar,
 		SharingTabSidebar,
 		TagsTabSidebar,
 		DeletedTabSidebar,

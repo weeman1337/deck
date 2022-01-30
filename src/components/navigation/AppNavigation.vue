@@ -32,14 +32,17 @@
 			</NcAppNavigationItem>
 			<AppNavigationBoardCategory id="deck-navigation-all"
 				to="/board"
-				:text="t('deck', 'All boards')"
-				:boards="noneArchivedBoards"
+				:text="allBoardsLabel"
+				:boards="nonArchivedUncategorisedBoards"
 				:open-on-add-boards="true"
-				icon="icon-deck">
-				<template #icon>
-					<DeckIcon :size="16" />
-				</template>
-			</AppNavigationBoardCategory>
+				icon="icon-deck" />
+			<AppNavigationBoardCategory v-for="category in nonArchivedBoardCategories"
+				:id="`deck-navigation-cat-${category}`"
+				:key="category"
+				:to="`/board/category/${urlEncode(category)}`"
+				:text="category"
+				:boards="nonArchivedBoardsByCategory[category]"
+				icon="icon-deck" />
 			<AppNavigationBoardCategory id="deck-navigation-archived"
 				to="/board/archived"
 				:text="t('deck', 'Archived boards')"
@@ -154,8 +157,11 @@ export default {
 	computed: {
 		...mapGetters([
 			'noneArchivedBoards',
+			'nonArchivedUncategorisedBoards',
 			'archivedBoards',
 			'sharedBoards',
+			'nonArchivedBoardCategories',
+			'nonArchivedBoardsByCategory',
 		]),
 		isAdmin() {
 			return !!getCurrentUser()?.isAdmin
@@ -175,6 +181,13 @@ export default {
 			set(newValue) {
 				this.$store.dispatch('setConfig', { calendar: newValue })
 			},
+		},
+		allBoardsLabel() {
+			if (this.nonArchivedBoardCategories.length > 0) {
+				return this.t('deck', 'Uncategorised boards')
+			}
+
+			return this.t('deck', 'All boards')
 		},
 	},
 	beforeMount() {
@@ -198,6 +211,9 @@ export default {
 		async updateConfig() {
 			await this.$store.dispatch('setConfig', { groupLimit: this.groupLimit })
 			this.groupLimitDisabled = false
+		},
+		urlEncode(value) {
+			return encodeURIComponent(value)
 		},
 	},
 }
