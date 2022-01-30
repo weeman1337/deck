@@ -38,6 +38,7 @@ class Board extends RelationalEntity {
 	protected $stacks = [];
 	protected $deletedAt = 0;
 	protected $lastModified = 0;
+	protected $category = null;
 
 	protected $settings = [];
 
