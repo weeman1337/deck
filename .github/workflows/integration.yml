@@ -27,7 +27,11 @@ jobs:
       matrix:
         php-versions: ['7.4']
         databases: ['sqlite', 'mysql', 'pgsql']
+<<<<<<< HEAD
         server-versions: ['stable25']
+=======
+        server-versions: ['stable24']
+>>>>>>> 0657efe2 (Update stable24 target versions)
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
