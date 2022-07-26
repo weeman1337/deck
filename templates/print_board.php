@@ -121,7 +121,7 @@
 </style>
 
 <div class="print-container">
-    <img src="<?php p(image_path('deck', 'vrmfr.jpg')); ?>" width="200" height="32" style="float:right;">
+    <img src="<?php p(image_path('deck', 'vrmfr.png')); ?>" width="200" height="70" style="float:right;">
     <h1 class="board-title"><?php echo $title; ?></h1>
     <div class="minititel">erstellt am <?php echo date("d.m.Y", time()); ?> um <?php echo date("H.i", time()); ?> Uhr<br><br></div>
 
