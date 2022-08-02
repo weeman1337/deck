@@ -118,6 +118,8 @@
             padding-top: 0 !important;
         }
     }
+
+    <?php echo $css; ?>
 </style>
 
 <div class="print-container">
@@ -126,6 +128,7 @@
     <div class="minititel">erstellt am <?php echo date("d.m.Y", time()); ?> um <?php echo date("H.i", time()); ?> Uhr<br><br></div>
 
 <?php
+
 foreach ($stacks as $stack) {
     echo '<hr class="stacks-divider">';
     echo '<h2 class="stack__title">' . $stack['title'] . '</h2>';
@@ -138,7 +141,7 @@ foreach ($stacks as $stack) {
         echo '<h3 class="card__title">' . $card['title'] . '</h3>';
 
         if (!empty($card['description'])) {
-            echo '<div class="card__description"><b></b> ' . $card['description'] . '</div>';
+            echo '<div class="card__description markdown"><b></b> ' . $card['description'] . '</div>';
         }
 
         if ($card['hasAttachment']) {

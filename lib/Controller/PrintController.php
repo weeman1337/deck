@@ -3,6 +3,12 @@
 namespace OCA\Deck\Controller;
 
 use DateTime;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\TaskList\TaskListExtension;
+use League\CommonMark\MarkdownConverter;
 use OCA\Deck\Db\Assignment;
 use OCA\Deck\Db\Board;
 use OCA\Deck\Db\Card;
@@ -43,6 +49,11 @@ class PrintController extends Controller {
      */
     private $userManager;
 
+    /**
+     * @var CommonMarkConverter
+     */
+    private $markdownConverter;
+
     public function __construct(
         $appName,
         IRequest $request,
@@ -58,6 +69,16 @@ class PrintController extends Controller {
         $this->commentsManager = $commentsManager;
         $this->userManager = $userManager;
         $this->cardService = $cardService;
+
+        $environment = new Environment([
+            'html_input' => 'escape',
+            'allow_unsafe_links' => false,
+        ]);
+
+        $environment->addExtension(new CommonMarkCoreExtension());
+        $environment->addExtension(new TableExtension());
+        $environment->addExtension(new TaskListExtension());
+        $this->markdownConverter = new MarkdownConverter($environment);
 	}
 
     /**
@@ -92,6 +113,7 @@ class PrintController extends Controller {
         $response->setParams([
             'title' => $board->getTitle(),
             'stacks' => $stacksData,
+            'css' => file_get_contents(__DIR__ . '/../../css/print_board.css'),
         ]);
 
         return $response;
@@ -124,9 +146,11 @@ class PrintController extends Controller {
             $dueDate = $date->format('d.m.Y');
         }
 
+        $description = $this->markdownConverter->convert($card->getDescription());
+
         return [
             'title' => $card->getTitle(),
-            'description' => $card->getDescription(),
+            'description' => $description,
             'dueDate' => $dueDate,
             'hasAttachment' => $card->getAttachmentCount() > 0,
             'labels' => array_map(fn ($label) => $label->getTitle(), $card->getLabels()),
