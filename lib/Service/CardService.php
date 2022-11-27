@@ -29,6 +29,7 @@ namespace OCA\Deck\Service;
 use OCA\Deck\Activity\ActivityManager;
 use OCA\Deck\Activity\ChangeSet;
 use OCA\Deck\Db\AssignmentMapper;
+use OCA\Deck\Db\AttachmentMapper;
 use OCA\Deck\Db\Card;
 use OCA\Deck\Db\CardMapper;
 use OCA\Deck\Db\Acl;
@@ -45,11 +46,15 @@ use OCA\Deck\StatusException;
 use OCA\Deck\BadRequestException;
 use OCA\Deck\Validators\CardServiceValidator;
 use OCP\Comments\ICommentsManager;
+use OCP\Constants;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface;
+use OCP\IL10N;
+use OCP\Share\IManager;
+use OCP\Share\IShare;
 
 class CardService {
 	private CardMapper $cardMapper;
@@ -71,6 +76,9 @@ class CardService {
 	private LoggerInterface $logger;
 	private IRequest $request;
 	private CardServiceValidator $cardServiceValidator;
+    private $assignmentService;
+    private IManager $shareManager;
+    private IL10N $l10n;
 
 	public function __construct(
 		CardMapper $cardMapper,
@@ -91,7 +99,10 @@ class CardService {
 		LoggerInterface $logger,
 		IRequest $request,
 		CardServiceValidator $cardServiceValidator,
-		?string $userId
+		?string $userId,
+        AssignmentService $assignmentService,
+        IManager $shareManager,
+        IL10N $l10n
 	) {
 		$this->cardMapper = $cardMapper;
 		$this->stackMapper = $stackMapper;
@@ -112,6 +123,9 @@ class CardService {
 		$this->logger = $logger;
 		$this->request = $request;
 		$this->cardServiceValidator = $cardServiceValidator;
+        $this->assignmentService = $assignmentService;
+        $this->shareManager = $shareManager;
+        $this->l10n = $l10n;
 	}
 
 	public function enrich($card) {
@@ -217,6 +231,58 @@ class CardService {
 
 		return $card;
 	}
+
+    public function copy($sourceCardId, $targetStackId) {
+        $sourceCardId = (int) $sourceCardId;
+        $targetStackId = (int) $targetStackId;
+
+        $this->permissionService->checkPermission($this->cardMapper, $sourceCardId, Acl::PERMISSION_READ);
+
+        $sourceCard = $this->cardMapper->find($sourceCardId);
+        $this->enrich($sourceCard);
+        $sourceBoardId = (int) $sourceCard->getRelatedStack()->getBoardId();
+        $targetBoardId = (int) $this->stackMapper->find($targetStackId)->getBoardId();
+
+        $title = $sourceCard->getTitle();
+
+        if ($sourceBoardId === $targetBoardId) {
+            $title = $this->l10n->t("Copy of") . " " . $title;
+        }
+
+        $copy = $this->create(
+            $title,
+            $targetStackId,
+            $sourceCard->getType(),
+            $sourceCard->getOrder(),
+            $this->currentUser,
+            $sourceCard->getDescription(),
+            $sourceCard->getDuedate(),
+            false,
+        );
+        $copyId = (int) $copy->getId();
+
+        foreach ($sourceCard->getLabels() as $label) {
+            $this->assignLabel($copyId, $label->getId());
+        }
+
+        foreach ($sourceCard->getAssignedUsers() as $assignment) {
+            $this->assignmentService->assignUser($copyId, $assignment->getParticipant(), $assignment->getType());
+        }
+
+        foreach ($this->attachmentService->findAll($sourceCardId) as $attachment) {
+            $sourceShare = $this->shareManager->getShareById("deck:" . $attachment->getId());
+            $share = $this->shareManager->newShare();
+            $share->setNode($sourceShare->getNode());
+            $share->setShareType(IShare::TYPE_DECK);
+            $share->setSharedWith((string) $copyId);
+            $share->setPermissions(Constants::PERMISSION_READ);
+            $share->setSharedBy($this->currentUser);
+            $share = $this->shareManager->createShare($share);
+        }
+
+        $this->enrich($copy);
+        return $copy;
+    }
 
 	/**
 	 * @param $id

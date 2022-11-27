@@ -230,7 +230,6 @@ class AttachmentService {
 		return $attachment;
 	}
 
-
 	/**
 	 * Display the attachment
 	 *

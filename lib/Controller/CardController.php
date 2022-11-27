@@ -30,7 +30,7 @@ use OCP\AppFramework\Controller;
 
 class CardController extends Controller {
 	private $userId;
-	private $cardService;
+	private CardService $cardService;
 	private $assignmentService;
 
 	public function __construct($appName, IRequest $request, CardService $cardService, AssignmentService $assignmentService, $userId) {
@@ -81,6 +81,16 @@ class CardController extends Controller {
 	public function create($title, $stackId, $type = 'plain', $order = 999, string $description = '') {
 		return $this->cardService->create($title, $stackId, $type, $order, $this->userId, $description);
 	}
+
+	/**
+	 * @NoAdminRequired
+	 * @param $cardId
+	 * @param $stackId
+	 * @return \OCP\AppFramework\Db\Entity
+	 */
+    public function copy($cardId, $stackId) {
+        return $this->cardService->copy($cardId, $stackId);
+    }
 
 	/**
 	 * @NoAdminRequired

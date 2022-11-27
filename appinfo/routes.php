@@ -53,6 +53,7 @@ return [
 		// cards
 		['name' => 'card#read', 'url' => '/cards/{cardId}', 'verb' => 'GET'],
 		['name' => 'card#create', 'url' => '/cards', 'verb' => 'POST'],
+		['name' => 'card#copy', 'url' => '/cards/{cardId}/copy', 'verb' => 'POST'],
 		['name' => 'card#update', 'url' => '/cards/{cardId}', 'verb' => 'PUT'],
 		['name' => 'card#delete', 'url' => '/cards/{cardId}', 'verb' => 'DELETE'],
 		['name' => 'card#deleted', 'url' => '/{boardId}/cards/deleted', 'verb' => 'GET'],

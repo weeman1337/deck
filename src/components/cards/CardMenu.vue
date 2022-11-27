@@ -37,10 +37,9 @@
 					{{ t('deck', 'Unassign myself') }}
 				</NcActionButton>
 				<NcActionButton icon="icon-external" :close-after-click="true" @click="modalShow=true">
-					{{ t('deck', 'Move card') }}
+					{{ t('deck', 'Copy/move card') }}
 				</NcActionButton>
 				<NcActionButton icon="icon-settings-dark" :close-after-click="true" @click="openCard">
-					<CardBulletedIcon slot="icon" :size="20" decorative />
 					{{ t('deck', 'Card details') }}
 				</NcActionButton>
 				<NcActionButton :close-after-click="true" @click="archiveUnarchiveCard()">
@@ -57,9 +56,9 @@
 				</NcActionButton>
 			</NcActions>
 		</div>
-		<NcModal v-if="modalShow" :title="t('deck', 'Move card to another board')" @close="modalShow=false">
+		<NcModal v-if="modalShow" :title="t('deck', 'Copy or move card to another board')" @close="modalShow=false">
 			<div class="modal__content">
-				<h3>{{ t('deck', 'Move card to another board') }}</h3>
+				<h3>{{ t('deck', 'Copy or move card to another board') }}</h3>
 				<NcMultiselect v-model="selectedBoard"
 					:placeholder="t('deck', 'Select a board')"
 					:options="activeBoards"
@@ -76,6 +75,9 @@
 					</span>
 				</NcMultiselect>
 
+				<button :disabled="!isBoardAndStackChoosen" class="primary" @click="copyCard">
+					{{ t('deck', 'Copy card') }}
+				</button>
 				<button :disabled="!isBoardAndStackChoosen" class="primary" @click="moveCard">
 					{{ t('deck', 'Move card') }}
 				</button>
@@ -177,6 +179,14 @@ export default {
 				},
 			})
 		},
+		async copyCard() {
+			const copy = await this.$store.dispatch('copyCard', {
+				id: this.card.id,
+				stackId: this.selectedStack.id,
+			})
+			this.modalShow = false
+			showUndo(t('deck', 'Card copied'), () => this.$store.dispatch('deleteCard', copy))
+		},
 		async moveCard() {
 			this.copiedCard = Object.assign({}, this.card)
 			this.copiedCard.stackId = this.selectedStack.id
@@ -201,7 +211,6 @@ export default {
 
 <style lang="scss" scoped>
 	.modal__content {
-		width: 25vw;
 		min-width: 250px;
 		min-height: 120px;
 		text-align: center;

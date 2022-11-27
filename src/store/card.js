@@ -284,9 +284,14 @@ export default {
 			const updatedCard = await apiClient.updateCard(card)
 			commit('updateCardProperty', { property: 'title', card: updatedCard })
 		},
-		async moveCard({ commit }, card) {
-			const updatedCard = await apiClient.updateCard(card)
+		async moveCard({ commit }, cardStub) {
+			const updatedCard = await apiClient.updateCard(cardStub)
 			commit('deleteCard', updatedCard)
+		},
+		async copyCard({ commit }, card) {
+			const copiedCard = await apiClient.copyCard(card)
+			commit('addCard', copiedCard)
+			return copiedCard
 		},
 		async reorderCard({ commit, getters }, card) {
 			let i = 0
