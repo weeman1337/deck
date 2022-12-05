@@ -144,10 +144,17 @@ export default {
 		activeBoards() {
 			return this.$store.getters.boards.filter((item) => item.deletedAt === 0 && item.archived === false)
 		},
-
 		boardId() {
 			return this.card?.boardId ? this.card.boardId : this.$route.params.id
 		},
+	},
+	created() {
+		// preselect card's stack
+		const stack = this.$store.getters.stackById(this.card.stackId)
+		this.selectedBoard = this.$store.getters.boardById(stack.boardId)
+		this.loadStacksFromBoard(this.selectedBoard).then(() => {
+			this.selectedStack = this.stacksFromBoard.find(s => s.id === this.card.stackId)
+		})
 	},
 	methods: {
 		openCard() {
@@ -197,11 +204,20 @@ export default {
 			this.modalShow = false
 		},
 		async loadStacksFromBoard(board) {
+			const currentStack = this.selectedStack
+            this.selectedStack = ''
+
 			try {
 				const url = generateUrl('/apps/deck/stacks/' + board.id)
 				const response = await axios.get(url)
 				this.stacksFromBoard = response.data
+
+				// try to set a stack with the same name or the first one or none
+				this.selectedStack = this.stacksFromBoard.find((stack) => {
+					return stack.title === currentStack.title
+				}) || this.stacksFromBoard[0] || ''
 			} catch (err) {
+				this.selectedStack = currentStack
 				return err
 			}
 		},
