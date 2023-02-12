@@ -1,8 +1,7 @@
 <template>
 	<div>
 		<label for="settings-category">{{ t('deck', 'Category') }}</label>
-		<Multiselect
-			id="settings-category"
+		<NcMultiselect id="settings-category"
 			v-model="category"
 			:placeholder="t('deck', 'select category')"
 			:options="selectCategories"
@@ -14,12 +13,12 @@
 <script>
 
 import { mapGetters } from 'vuex'
-import { Multiselect } from '@nextcloud/vue'
+import { NcMultiselect } from '@nextcloud/vue'
 
 export default {
 	name: 'SettingsTabsSidebar',
 	components: {
-		Multiselect,
+		NcMultiselect,
 	},
 	props: {
 		board: {

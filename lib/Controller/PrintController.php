@@ -97,7 +97,7 @@ class PrintController extends Controller {
 
     private function printBoard($boardId) {
 
-		$response = new TemplateResponse('deck', 'print_board');
+		$response = new TemplateResponse('deck', 'print_board', [], TemplateResponse::RENDER_AS_BLANK);
 
         /** @var Board $board */
         $board = $this->boardService->find($boardId);

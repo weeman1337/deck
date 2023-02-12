@@ -60,12 +60,14 @@
 			<div class="modal__content">
 				<h3>{{ t('deck', 'Copy or move card to another board') }}</h3>
 				<NcMultiselect v-model="selectedBoard"
+					:track-by="id"
 					:placeholder="t('deck', 'Select a board')"
 					:options="activeBoards"
 					:max-height="100"
 					label="title"
 					@select="loadStacksFromBoard" />
 				<NcMultiselect v-model="selectedStack"
+					:track-by="id"
 					:placeholder="t('deck', 'Select a list')"
 					:options="stacksFromBoard"
 					:max-height="100"
@@ -97,11 +99,10 @@ import { getCurrentUser } from '@nextcloud/auth'
 import { showUndo } from '@nextcloud/dialogs'
 import '@nextcloud/dialogs/styles/toast.scss'
 import ArchiveIcon from 'vue-material-design-icons/Archive'
-import CardBulletedIcon from 'vue-material-design-icons/CardBulleted'
 
 export default {
 	name: 'CardMenu',
-	components: { NcActions, NcActionButton, NcModal, NcMultiselect, ArchiveIcon, CardBulletedIcon },
+	components: { NcActions, NcActionButton, NcModal, NcMultiselect, ArchiveIcon },
 	props: {
 		card: {
 			type: Object,
@@ -149,14 +150,16 @@ export default {
 		},
 	},
 	created() {
-		// preselect card's stack
-		const stack = this.$store.getters.stackById(this.card.stackId)
-		this.selectedBoard = this.$store.getters.boardById(stack.boardId)
-		this.loadStacksFromBoard(this.selectedBoard).then(() => {
-			this.selectedStack = this.stacksFromBoard.find(s => s.id === this.card.stackId)
-		})
+		this.preselectBoardAndStack()
 	},
 	methods: {
+		preselectBoardAndStack() {
+			const stack = this.$store.getters.stackById(this.card.stackId)
+			this.selectedBoard = this.$store.getters.boardById(stack.boardId)
+			this.loadStacksFromBoard(this.selectedBoard).then(() => {
+				this.selectedStack = this.stacksFromBoard.find(s => s.id === this.card.stackId)
+			})
+		},
 		openCard() {
 			const boardId = this.card?.boardId ? this.card.boardId : this.$route.params.id
 			this.$router.push({ name: 'card', params: { id: boardId, cardId: this.card.id } }).catch(() => {})
@@ -205,7 +208,7 @@ export default {
 		},
 		async loadStacksFromBoard(board) {
 			const currentStack = this.selectedStack
-            this.selectedStack = ''
+			this.selectedStack = ''
 
 			try {
 				const url = generateUrl('/apps/deck/stacks/' + board.id)

@@ -1,6 +1,8 @@
 <style>
     .content {
+		background-color: white;
         padding: 32px;
+		width: 100%;
     }
 
     .h1 {

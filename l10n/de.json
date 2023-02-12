@@ -1,4 +1,5 @@
 { "translations": {
+	"Copy of": "Kopie von",
     "You have created a new board {board}" : "Du hast das neue Board {board} erstellt",
     "{user} has created a new board {board}" : "{user} hat das neue Board {board} erstellt",
     "You have deleted the board {board}" : "Du hast das Board {board} gelöscht",

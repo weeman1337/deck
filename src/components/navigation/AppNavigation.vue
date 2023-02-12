@@ -35,14 +35,22 @@
 				:text="allBoardsLabel"
 				:boards="nonArchivedUncategorisedBoards"
 				:open-on-add-boards="true"
-				icon="icon-deck" />
+				icon="icon-deck">
+				<template #icon>
+					<DeckIcon :size="16" />
+				</template>
+			</AppNavigationBoardCategory>
 			<AppNavigationBoardCategory v-for="category in nonArchivedBoardCategories"
 				:id="`deck-navigation-cat-${category}`"
 				:key="category"
 				:to="`/board/category/${urlEncode(category)}`"
 				:text="category"
 				:boards="nonArchivedBoardsByCategory[category]"
-				icon="icon-deck" />
+				icon="icon-deck">
+				<template #icon>
+					<DeckIcon :size="16" />
+				</template>
+			</AppNavigationBoardCategory>
 			<AppNavigationBoardCategory id="deck-navigation-archived"
 				to="/board/archived"
 				:text="t('deck', 'Archived boards')"
@@ -116,9 +124,9 @@ import { loadState } from '@nextcloud/initial-state'
 import { generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
 import ArchiveIcon from 'vue-material-design-icons/Archive.vue'
+import ShareVariantIcon from 'vue-material-design-icons/Share.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
 import DeckIcon from './../icons/DeckIcon.vue'
-import ShareVariantIcon from 'vue-material-design-icons/Share.vue'
 
 const canCreateState = loadState('deck', 'canCreate')
 
