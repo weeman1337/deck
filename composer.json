@@ -11,7 +11,7 @@
 	"require": {
 		"cogpowered/finediff": "0.3.*",
 		"justinrainbow/json-schema": "^5.2",
-		"league/commonmark": "^2.3"
+		"league/commonmark": "^2.4"
 	},
 	"require-dev": {
 		"roave/security-advisories": "dev-master",

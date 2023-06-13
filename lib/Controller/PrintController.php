@@ -139,12 +139,11 @@ class PrintController extends Controller {
 
         $this->cardService->enrich($card);
 
-        if (empty($card->getDuedate())) {
-            $dueDate = null;
-        } else {
-            $date = new DateTime($card->getDuedate());
-            $dueDate = $date->format('d.m.Y');
-        }
+		$duedate = null;
+
+		if ($card->getDuedate() !== null) {
+            $dueDate = $card->getDuedate()->format('d.m.Y');
+		}
 
         $description = $this->markdownConverter->convert($card->getDescription());
 
