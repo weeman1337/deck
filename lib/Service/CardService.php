@@ -26,6 +26,7 @@
 
 namespace OCA\Deck\Service;
 
+use Exception;
 use OCA\Deck\Activity\ActivityManager;
 use OCA\Deck\Activity\ChangeSet;
 use OCA\Deck\Db\AssignmentMapper;
@@ -270,19 +271,29 @@ class CardService {
         }
 
         foreach ($this->attachmentService->findAll($sourceCardId) as $attachment) {
-            $sourceShare = $this->shareManager->getShareById("deck:" . $attachment->getId());
-            $share = $this->shareManager->newShare();
-            $share->setNode($sourceShare->getNode());
-            $share->setShareType(IShare::TYPE_DECK);
-            $share->setSharedWith((string) $copyId);
-            $share->setPermissions(Constants::PERMISSION_READ);
-            $share->setSharedBy($this->currentUser);
-            $share = $this->shareManager->createShare($share);
+			try {
+				$this->reShareAttachment($copyId, $attachment);
+			} catch (Exception $error) {
+				$this->logger->warning('Error copying card share', [
+					'error' => $error,
+				]);
+			}
         }
 
         $this->enrich($copy);
         return $copy;
     }
+
+	private function reShareAttachment($cardId, $attachment) {
+		$sourceShare = $this->shareManager->getShareById("deck:" . $attachment->getId());
+		$share = $this->shareManager->newShare();
+		$share->setNode($sourceShare->getNode());
+		$share->setShareType(IShare::TYPE_DECK);
+		$share->setSharedWith((string) $cardId);
+		$share->setPermissions(Constants::PERMISSION_READ);
+		$share->setSharedBy($this->currentUser);
+		$share = $this->shareManager->createShare($share);
+	}
 
 	/**
 	 * @param $id
