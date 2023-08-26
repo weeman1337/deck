@@ -105,6 +105,11 @@ class PrintController extends Controller {
         /** @var Stack[] $stacks */
         $stacks = $this->stackService->findAll($boardId);
 
+		// Sort stacks by order attribute
+		usort($stacks, function ($stackA, $stackB) {
+			return $stackA->getOrder() - $stackB->getOrder();
+		});
+
         $stacksData = array_map(
             [$this, 'mapStack'],
             $stacks
