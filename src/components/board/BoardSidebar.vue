@@ -34,8 +34,16 @@
 			<SharingTabSidebar :board="board" />
 		</NcAppSidebarTab>
 
-		<NcAppSidebarTab id="tags"
+		<NcAppSidebarTab v-if="canEdit"
+			id="board-settings"
 			:order="1"
+			:name="t('deck', 'Settings')"
+			icon="icon-settings">
+			<SettingsTabsSidebar :board="board" />
+		</NcAppSidebarTab>
+
+		<NcAppSidebarTab id="tags"
+			:order="2"
 			:name="t('deck', 'Tags')">
 			<template #icon>
 				<TagsIcon :size="20" />
@@ -45,7 +53,7 @@
 
 		<NcAppSidebarTab v-if="canEdit"
 			id="deleted"
-			:order="2"
+			:order="3"
 			:name="t('deck', 'Deleted items')">
 			<template #icon>
 				<TrashIcon :size="20" />
@@ -55,7 +63,7 @@
 
 		<NcAppSidebarTab v-if="hasActivity"
 			id="activity"
-			:order="3"
+			:order="4"
 			:name="t('deck', 'Activity')">
 			<template #icon>
 				<ActivityIcon :size="20" />
@@ -76,6 +84,7 @@ import ActivityIcon from 'vue-material-design-icons/LightningBolt.vue'
 import SharingIcon from 'vue-material-design-icons/ShareVariant.vue'
 import TagsIcon from 'vue-material-design-icons/TagMultiple.vue'
 import TrashIcon from 'vue-material-design-icons/Delete.vue'
+import SettingsTabsSidebar from './SettingsTabsSidebar.vue'
 const capabilities = window.OC.getCapabilities()
 
 export default {
@@ -91,6 +100,7 @@ export default {
 		SharingIcon,
 		TagsIcon,
 		TrashIcon,
+		SettingsTabsSidebar,
 	},
 	props: {
 		id: {

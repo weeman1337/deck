@@ -239,12 +239,13 @@ class BoardServiceTest extends TestCase {
 		$this->sessionMapper->expects($this->once())
 			->method('findAllActive')
 			->willReturn([]);
-		$b = $this->service->update(123, 'MyNewNameBoard', 'ffffff', false);
+		$b = $this->service->update(123, 'MyNewNameBoard', 'ffffff', false, 'Test Category');
 
 		$this->assertEquals($b->getTitle(), 'MyNewNameBoard');
 		$this->assertEquals($b->getOwner(), 'admin');
 		$this->assertEquals($b->getColor(), 'ffffff');
 		$this->assertEquals($b->getArchived(), false);
+		$this->assertEquals($b->getCategory(), 'TestCategory');
 	}
 
 	public function testDelete() {

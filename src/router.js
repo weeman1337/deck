@@ -66,6 +66,15 @@ const router = new Router({
 			},
 		},
 		{
+			path: '/board/category/:category',
+			name: 'boards.category',
+			component: Boards,
+			props: route => ({
+				navFilter: BOARD_FILTERS.CATEGORY,
+				navFilterCategory: decodeURIComponent(route.params.category),
+			}),
+		},
+		{
 			path: '/board/archived',
 			name: 'boards.archived',
 			component: Boards,

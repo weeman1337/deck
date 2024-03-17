@@ -34,6 +34,7 @@ class BoardTest extends TestCase {
 			'settings' => [],
 			'activeSessions' => [],
 			'ETag' => $board->getETag(),
+			'category' => null,
 		], $board->jsonSerialize());
 	}
 
@@ -58,6 +59,7 @@ class BoardTest extends TestCase {
 			'settings' => [],
 			'activeSessions' => [],
 			'ETag' => $board->getETag(),
+			'category' => null,
 		], $board->jsonSerialize());
 	}
 
@@ -80,6 +82,7 @@ class BoardTest extends TestCase {
 			'settings' => [],
 			'activeSessions' => [],
 			'ETag' => $board->getETag(),
+			'category' => null,
 		], $board->jsonSerialize());
 	}
 	public function testSetAcl() {
@@ -110,6 +113,7 @@ class BoardTest extends TestCase {
 			'settings' => [],
 			'activeSessions' => [],
 			'ETag' => $board->getETag(),
+			'category' => null,
 		], $board->jsonSerialize());
 	}
 }
