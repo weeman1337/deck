@@ -32,10 +32,21 @@
 			</NcAppNavigationItem>
 			<AppNavigationBoardCategory id="deck-navigation-all"
 				to="/board"
-				:text="t('deck', 'All boards')"
-				:boards="noneArchivedBoards"
+				:text="allBoardsLabel"
+				:boards="nonArchivedUncategorisedBoards"
 				:open-on-add-boards="true"
 				:default-open="true"
+				icon="icon-deck">
+				<template #icon>
+					<DeckIcon :size="16" />
+				</template>
+			</AppNavigationBoardCategory>
+			<AppNavigationBoardCategory v-for="category in nonArchivedBoardCategories"
+				:id="`deck-navigation-cat-${category}`"
+				:key="category"
+				:to="`/board/category/${urlEncode(category)}`"
+				:text="category"
+				:boards="nonArchivedBoardsByCategory[category]"
 				icon="icon-deck">
 				<template #icon>
 					<DeckIcon :size="16" />
@@ -176,6 +187,9 @@ export default {
 			'noneArchivedBoards',
 			'archivedBoards',
 			'sharedBoards',
+			'nonArchivedUncategorisedBoards',
+			'nonArchivedBoardCategories',
+			'nonArchivedBoardsByCategory',
 		]),
 		isAdmin() {
 			return !!getCurrentUser()?.isAdmin
@@ -204,6 +218,12 @@ export default {
 				this.$store.dispatch('setConfig', { calendar: newValue })
 			},
 		},
+		allBoardsLabel() {
+			if (this.nonArchivedBoardCategories.length > 0) {
+				return this.t('deck', 'Uncategorised boards')
+			}
+			return this.t('deck', 'All boards')
+		},
 	},
 	mounted() {
 		subscribe('deck:global:toggle-help-dialog', () => {
@@ -231,6 +251,9 @@ export default {
 		async updateConfig() {
 			await this.$store.dispatch('setConfig', { groupLimit: this.groupLimit })
 			this.groupLimitDisabled = false
+		},
+		urlEncode(value) {
+			return encodeURIComponent(value)
 		},
 	},
 }
