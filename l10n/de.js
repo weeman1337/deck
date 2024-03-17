@@ -389,6 +389,11 @@ OC.L10N.register(
     "Categories": "Kategorien",
     "Uncategorised boards": "Unkategorisierte Boards",
     "Settings": "Einstellungen",
-    "uncategorised": "unkategorisiert"
+    "uncategorised": "unkategorisiert",
+
+	"Copy of": "Kopie von",
+	"Copy card" : "Karte kopieren",
+    "Copy/move card" : "Karte kopieren/verschieben",
+    "Copy or move card to another board": "Karte kopieren oder auf ein anderes Board verschieben"
 },
 "nplurals=2; plural=(n != 1);");

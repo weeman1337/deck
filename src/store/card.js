@@ -299,6 +299,11 @@ export default {
 			const updatedCard = await apiClient.updateCard(card)
 			commit('deleteCard', updatedCard)
 		},
+		async copyCard({ commit }, card) {
+			const copiedCard = await apiClient.copyCard(card)
+			commit('addCard', copiedCard)
+			return copiedCard
+		},
 		async reorderCard({ commit, getters }, card) {
 			let i = 0
 			const newCards = []

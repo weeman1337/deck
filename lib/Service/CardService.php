@@ -55,6 +55,13 @@ use OCP\IURLGenerator;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface;
 
+use Exception;
+use OCA\Deck\Db\AttachmentMapper;
+use OCP\Constants;
+use OCP\IL10N;
+use OCP\Share\IManager;
+use OCP\Share\IShare;
+
 class CardService {
 	private CardMapper $cardMapper;
 	private StackMapper $stackMapper;
@@ -75,6 +82,9 @@ class CardService {
 	private LoggerInterface $logger;
 	private IRequest $request;
 	private CardServiceValidator $cardServiceValidator;
+	private $assignmentService;
+    private IManager $shareManager;
+    private IL10N $l10n;
 
 	public function __construct(
 		CardMapper $cardMapper,
@@ -95,7 +105,10 @@ class CardService {
 		LoggerInterface $logger,
 		IRequest $request,
 		CardServiceValidator $cardServiceValidator,
-		?string $userId
+		?string $userId,
+        AssignmentService $assignmentService,
+        IManager $shareManager,
+        IL10N $l10n
 	) {
 		$this->cardMapper = $cardMapper;
 		$this->stackMapper = $stackMapper;
@@ -116,6 +129,9 @@ class CardService {
 		$this->logger = $logger;
 		$this->request = $request;
 		$this->cardServiceValidator = $cardServiceValidator;
+		$this->assignmentService = $assignmentService;
+        $this->shareManager = $shareManager;
+        $this->l10n = $l10n;
 	}
 
 	public function enrichCards($cards) {
@@ -645,5 +661,67 @@ class CardService {
 
 	public function getRedirectUrlForCard($cardId) {
 		return $this->urlGenerator->linkToRouteAbsolute('deck.page.index') . "card/$cardId";
+	}
+
+	public function copy($sourceCardId, $targetStackId) {
+        $sourceCardId = (int) $sourceCardId;
+        $targetStackId = (int) $targetStackId;
+
+        $this->permissionService->checkPermission($this->cardMapper, $sourceCardId, Acl::PERMISSION_READ);
+
+        $sourceCard = $this->cardMapper->find($sourceCardId);
+        $this->enrichCards([$sourceCard]);
+        $sourceBoardId = (int) $sourceCard->getRelatedStack()->getBoardId();
+        $targetBoardId = (int) $this->stackMapper->find($targetStackId)->getBoardId();
+
+        $title = $sourceCard->getTitle();
+
+        if ($sourceBoardId === $targetBoardId) {
+            $title = $this->l10n->t("Copy of") . " " . $title;
+        }
+
+        $copy = $this->create(
+            $title,
+            $targetStackId,
+            $sourceCard->getType(),
+            $sourceCard->getOrder(),
+            $this->currentUser,
+            $sourceCard->getDescription(),
+            $sourceCard->getDuedate(),
+            false,
+        );
+        $copyId = (int) $copy->getId();
+
+        foreach ($sourceCard->getLabels() as $label) {
+            $this->assignLabel($copyId, $label->getId());
+        }
+
+        foreach ($sourceCard->getAssignedUsers() as $assignment) {
+            $this->assignmentService->assignUser($copyId, $assignment->getParticipant(), $assignment->getType());
+        }
+
+        foreach ($this->attachmentService->findAll($sourceCardId) as $attachment) {
+			try {
+				$this->reShareAttachment($copyId, $attachment);
+			} catch (Exception $error) {
+				$this->logger->warning('Error copying card share', [
+					'error' => $error,
+				]);
+			}
+        }
+
+        $this->enrichCards([$copy]);
+        return $copy;
+    }
+
+	private function reShareAttachment($cardId, $attachment) {
+		$sourceShare = $this->shareManager->getShareById("deck:" . $attachment->getId());
+		$share = $this->shareManager->newShare();
+		$share->setNode($sourceShare->getNode());
+		$share->setShareType(IShare::TYPE_DECK);
+		$share->setSharedWith((string) $cardId);
+		$share->setPermissions(Constants::PERMISSION_READ);
+		$share->setSharedBy($this->currentUser);
+		$share = $this->shareManager->createShare($share);
 	}
 }

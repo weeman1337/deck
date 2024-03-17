@@ -42,6 +42,16 @@ class CardController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @param $cardId
+	 * @param $stackId
+	 * @return \OCP\AppFramework\Db\Entity
+	 */
+    public function copy($cardId, $stackId) {
+        return $this->cardService->copy($cardId, $stackId);
+    }
+
+	/**
+	 * @NoAdminRequired
+	 * @param $cardId
 	 * @return \OCP\AppFramework\Db\Entity
 	 */
 	public function read($cardId) {

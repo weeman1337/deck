@@ -145,6 +145,7 @@ return [
 
 		['name' => 'board_api#preflighted_cors', 'url' => '/api/v{apiVersion}/{path}','verb' => 'OPTIONS', 'requirements' => ['path' => '.+']],
 
+		['name' => 'card#copy', 'url' => '/cards/{cardId}/copy', 'verb' => 'POST'],
 		['name' => 'print#index', 'url' => '/print', 'verb' => 'GET'],
 	],
 	'ocs' => [

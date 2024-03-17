@@ -1,14 +1,16 @@
 <template>
-	<NcModal v-if="modalShow" :title="t('deck', 'Move card to another board')" @close="modalShow=false">
+	<NcModal v-if="modalShow" :title="t('deck', 'Copy or move card to another board')" @close="modalShow=false">
 		<div class="modal__content">
-			<h3>{{ t('deck', 'Move card to another board') }}</h3>
+			<h3>{{ t('deck', 'Copy or move card to another board') }}</h3>
 			<NcMultiselect v-model="selectedBoard"
+				:track-by="id"
 				:placeholder="t('deck', 'Select a board')"
 				:options="activeBoards"
 				:max-height="100"
 				label="title"
 				@select="loadStacksFromBoard" />
 			<NcMultiselect v-model="selectedStack"
+				:track-by="id"
 				:placeholder="t('deck', 'Select a list')"
 				:options="stacksFromBoard"
 				:max-height="100"
@@ -18,6 +20,9 @@
 				</span>
 			</NcMultiselect>
 
+			<button :disabled="!isBoardAndStackChoosen" class="primary" @click="copyCard">
+				{{ t('deck', 'Copy card') }}
+			</button>
 			<button :disabled="!isBoardAndStackChoosen" class="primary" @click="moveCard">
 				{{ t('deck', 'Move card') }}
 			</button>
@@ -63,14 +68,25 @@ export default {
 	methods: {
 		openModal(card) {
 			this.card = card
-			this.modalShow = true
+			this.preselectBoardAndStack().then(() => {
+				this.modalShow = true
+			});
 		},
 		async loadStacksFromBoard(board) {
+			const currentStack = this.selectedStack
+			this.selectedStack = ''
+
 			try {
 				const url = generateUrl('/apps/deck/stacks/' + board.id)
 				const response = await axios.get(url)
 				this.stacksFromBoard = response.data
+
+				// try to set a stack with the same name or the first one or none
+				this.selectedStack = this.stacksFromBoard.find((stack) => {
+					return stack.title === currentStack.title
+				}) || this.stacksFromBoard[0] || ''
 			} catch (err) {
+				this.selectedStack = currentStack
 				return err
 			}
 		},
@@ -83,13 +99,27 @@ export default {
 			}
 			this.modalShow = false
 		},
+
+		async preselectBoardAndStack() {
+			const stack = this.$store.getters.stackById(this.card.stackId)
+			this.selectedBoard = this.$store.getters.boardById(stack.boardId)
+			await this.loadStacksFromBoard(this.selectedBoard);
+			this.selectedStack = this.stacksFromBoard.find(s => s.id === this.card.stackId)
+		},
+		async copyCard() {
+			const copy = await this.$store.dispatch('copyCard', {
+				id: this.card.id,
+				stackId: this.selectedStack.id,
+			})
+			this.modalShow = false
+			showUndo(t('deck', 'Card copied'), () => this.$store.dispatch('deleteCard', copy))
+		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
 .modal__content {
-	width: 25vw;
 	min-width: 250px;
 	min-height: 120px;
 	text-align: center;

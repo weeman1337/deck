@@ -48,7 +48,7 @@
 			icon="icon-external"
 			:close-after-click="true"
 			@click="openCardMoveDialog">
-			{{ t('deck', 'Move card') }}
+			{{ t('deck', 'Copy/move card') }}
 		</NcActionButton>
 		<NcActionButton v-for="action in cardActions"
 			:key="action.label"

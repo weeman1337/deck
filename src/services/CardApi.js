@@ -225,4 +225,19 @@ export class CardApi {
 			})
 	}
 
+	copyCard(card) {
+		return axios.post(this.url(`/cards/${card.id}/copy`), card)
+			.then(
+				(response) => {
+					return Promise.resolve(response.data)
+				},
+				(err) => {
+					return Promise.reject(err)
+				}
+			)
+			.catch((err) => {
+				return Promise.reject(err)
+			})
+	}
+
 }
