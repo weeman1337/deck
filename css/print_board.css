@@ -1,0 +1,96 @@
+.markdown p {
+  margin-bottom: 15px;
+}
+.markdown * {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.markdown a {
+  opacity: 0.5;
+  text-decoration: underline;
+}
+.markdown ol,
+.markdown ul {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+.markdown ul {
+  list-style-type: disc;
+}
+.markdown ul .task-list-item {
+  margin-left: -20px;
+  list-style-type: none;
+}
+.markdown h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.markdown h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.markdown h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+.markdown h4 {
+  font-size: 13px;
+  font-weight: 600;
+}
+.markdown h6 {
+  font-size: 12px;
+  font-weight: 600;
+}
+.markdown pre {
+  background-color: var(--color-background-dark);
+  padding: 3px;
+  overflow: auto;
+}
+.markdown pre code {
+  white-space: pre;
+}
+.markdown img {
+  max-width: 100%;
+  max-height: 50vh;
+  margin: auto;
+  display: block;
+}
+.markdown input[type=checkbox] {
+  margin: 0px 3px 0px 0px;
+  line-height: 10px;
+  font-size: 10px;
+  display: inline-block;
+  min-height: 12px;
+}
+.markdown li input[type=checkbox].checkbox + label::before {
+  margin-left: -15px;
+}
+.markdown input[type=checkbox].checkbox + label::before {
+  position: relative;
+  z-index: 100;
+  margin-right: 10px;
+  margin-top: 0;
+}
+.markdown li input[type=checkbox].checkbox:not(:checked) + label::before {
+  background-color: var(--color-main-background);
+}
+.markdown table {
+  margin-bottom: 10px;
+  border-collapse: collapse;
+}
+.markdown table thead {
+  background-color: var(--color-background-dark);
+}
+.markdown table td, .markdown table th {
+  border: 1px solid var(--color-background-darker);
+  padding: 3px;
+}
+.markdown blockquote {
+  padding-left: 10px;
+  border-left: 3px solid var(--color-border-dark);
+  color: var(--color-text-lighter);
+}
+
+/*# sourceMappingURL=print_board.css.map */
