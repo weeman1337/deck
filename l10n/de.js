@@ -383,6 +383,14 @@ OC.L10N.register(
     "Categories": "Kategorien",
     "Uncategorised boards": "Unkategorisierte Boards",
     "Settings": "Einstellungen",
-    "uncategorised": "unkategorisiert"
+    "uncategorised": "unkategorisiert",
+    "Edit category": "Kategorie bearbeiten",
+	"Title": "Titel",
+	"Color": "Farbe",
+	"Sort": "Sortierung",
+	"Title already in use": "Titel schon vergeben",
+	"Title should have at max 100 chars": "Titel darf maximal 100 Zeichen lang sein",
+	"Please fill in the title": "Bitte Titel eingeben",
+	"Sort must be a value from 1 to 99999": "Sortierung muss von 1 bis 99.999 sein",
 },
 "nplurals=2; plural=(n != 1);");

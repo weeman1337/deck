@@ -67,6 +67,7 @@ export default new Vuex.Store({
 		currentBoard: null,
 		currentCard: null,
 		boards: loadState('deck', 'initialBoards', []),
+		categories: loadState('deck', 'initialCategories', []),
 		sharees: [],
 		assignableUsers: [],
 		boardFilter: BOARD_FILTERS.ALL,
@@ -94,46 +95,41 @@ export default new Vuex.Store({
 			return state.boards.find((board) => board.id === id)
 		},
 		categories: state => {
-			const categories = []
-			state.boards.forEach((board) => {
-				if (board.category && !categories.includes(board.category)) {
-					categories.push(board.category)
-				}
-			})
-			return categories.sort()
+			return state.categories
 		},
 		nonArchivedBoardCategories: state => {
-			const categories = []
+			const categoryIds = new Set()
 
 			state.boards.forEach(board => {
-				if (board.archived || board.deletedAt || !board.category) {
+				if (board.archived || board.deletedAt || !board.categoryId) {
 					return
 				}
 
-				if (!categories.includes(board.category)) {
-					categories.push(board.category)
-				}
+				categoryIds.add(board.categoryId)
 			})
 
-			return categories.sort()
+			const categories = state.categories.filter((c) => categoryIds.has(c.id))
+			return categories.sort((a, b) => {
+				return a.order - b.order || a.title.localeCompare(b.title)
+			})
 		},
 		nonArchivedBoardsByCategory: state => {
 			const boards = {}
 
 			state.boards.forEach(board => {
-				if (board.archived || board.deletedAt || !board.category) {
+				if (board.archived || board.deletedAt || !board.categoryId) {
 					return
 				}
 
-				boards[board.category] = boards[board.category] || []
-				boards[board.category].push(board)
+				boards[board.categoryId] = boards[board.categoryId] || []
+				boards[board.categoryId].push(board)
 			})
 
 			return boards
 		},
 		nonArchivedUncategorisedBoards: state => {
 			return state.boards.filter(board => {
-				return board.archived === false && !board.deletedAt && !board.category
+				return board.archived === false && !board.deletedAt && !board.categoryId
 			})
 		},
 		assignables: state => {
@@ -360,6 +356,27 @@ export default new Vuex.Store({
 		TOGGLE_SHORTCUT_LOCK(state, lock) {
 			state.shortcutLock = lock
 		},
+
+		addCategory(state, category) {
+			const indexExisting = state.categories.findIndex((b) => {
+				return category.id === b.id
+			})
+
+			if (indexExisting > -1) {
+				Vue.set(state.categories, indexExisting, category)
+			} else {
+				state.categories.push(category)
+			}
+		},
+		deleteCategory(state, category) {
+			const removeIndex = state.categories.findIndex((b) => {
+				return category.id === b.id
+			})
+
+			if (removeIndex > -1) {
+				Vue.delete(state.categories, removeIndex)
+			}
+		},
 	},
 	actions: {
 		async setConfig({ commit }, config) {
@@ -482,6 +499,34 @@ export default new Vuex.Store({
 
 			const response = await axios.get(generateOcsUrl('apps/files_sharing/api/v1/sharees'), { params })
 			commit('setSharees', response.data.ocs.data)
+		},
+
+		async createCategory({ commit }, categoryData) {
+			try {
+				const category = await apiClient.createCategory(categoryData)
+				commit('addCategory', category)
+				return category
+			} catch (err) {
+				return err
+			}
+		},
+		async updateCategory({ commit }, category) {
+			try {
+				const updatedCategory = await apiClient.updateCategory(category)
+				commit('addCategory', updatedCategory)
+				return category
+			} catch (err) {
+				return err
+			}
+		},
+		async deleteCategory({ commit }, category) {
+			try {
+				await apiClient.deleteCategory(category)
+				commit('deleteCategory', category)
+				return category
+			} catch (err) {
+				return err
+			}
 		},
 
 		setBoardFilter({ commmit }, filter) {

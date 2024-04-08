@@ -48,6 +48,7 @@ class Board extends RelationalEntity {
 	protected $deletedAt = 0;
 	protected $lastModified = 0;
 	protected $category = null;
+	protected $categoryId = null;
 
 	protected $settings = [];
 
@@ -65,7 +66,7 @@ class Board extends RelationalEntity {
 		$this->addRelation('permissions');
 		$this->addRelation('stacks');
 		$this->addRelation('settings');
-		$this->addResolvable('owner');
+		$this->addResolvable('category');
 		$this->shared = -1;
 	}
 

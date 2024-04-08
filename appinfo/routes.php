@@ -144,6 +144,15 @@ return [
 		['name' => 'attachment_api_v11#restore', 'url' => '/api/v{apiVersion}/boards/{boardId}/stacks/{stackId}/cards/{cardId}/attachments/{type}/{attachmentId}/restore', 'verb' => 'PUT', 'requirements' => ['apiVersion' => '1.1']],
 
 		['name' => 'board_api#preflighted_cors', 'url' => '/api/v{apiVersion}/{path}','verb' => 'OPTIONS', 'requirements' => ['path' => '.+']],
+
+		['name' => 'category#create', 'url' => '/categories', 'verb' => 'POST'],
+		['name' => 'category#update', 'url' => '/categories/{categoryId}', 'verb' => 'PUT'],
+		['name' => 'category#delete', 'url' => '/categories/{categoryId}', 'verb' => 'DELETE'],
+
+		['name' => 'category_api#index', 'url' => '/api/v{apiVersion}/categories', 'verb' => 'GET'],
+		['name' => 'category_api#create', 'url' => '/api/v{apiVersion}/categories', 'verb' => 'POST'],
+		['name' => 'category_api#delete', 'url' => '/api/v{apiVersion}/categories/{categoryId}', 'verb' => 'DELETE'],
+		['name' => 'category_api#update', 'url' => '/api/v{apiVersion}/categories/{categoryId}', 'verb' => 'PUT'],
 	],
 	'ocs' => [
 		['name' => 'Config#get', 'url' => '/api/v{apiVersion}/config', 'verb' => 'GET'],

@@ -30,6 +30,9 @@
 		<template #icon>
 			<slot name="icon" />
 		</template>
+		<template #actions>
+			<slot name="actions" />
+		</template>
 	</NcAppNavigationItem>
 </template>
 

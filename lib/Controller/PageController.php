@@ -23,6 +23,7 @@
 
 namespace OCA\Deck\Controller;
 
+use OCA\Deck\Db\CategoryMapper;
 use \OCP\AppFramework\Http\RedirectResponse;
 use OCA\Deck\Db\Acl;
 use OCA\Deck\Db\CardMapper;
@@ -58,6 +59,7 @@ class PageController extends Controller {
 		private IURLGenerator $urlGenerator,
 		private CardService $cardService,
 		private IConfig $config,
+		private CategoryMapper $categoryMapper,
 	) {
 		parent::__construct($AppName, $request);
 	}
@@ -70,6 +72,7 @@ class PageController extends Controller {
 		$this->initialState->provideInitialState('config', $this->configService->getAll());
 
 		$this->initialState->provideInitialState('initialBoards', $this->boardService->findAll());
+		$this->initialState->provideInitialState('initialCategories', $this->categoryMapper->findAll());
 
 		$this->eventDispatcher->dispatchTyped(new LoadSidebar());
 		$this->eventDispatcher->dispatchTyped(new CollaborationResourcesEvent());

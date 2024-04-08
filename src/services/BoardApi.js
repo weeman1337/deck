@@ -307,4 +307,61 @@ export class BoardApi {
 			})
 	}
 
+	/**
+	 * @param {*} categoryData
+	 * @return {Promise<Category>}
+	 */
+	createCategory(categoryData) {
+		return axios.post(this.url('/categories'), categoryData)
+			.then(
+				(response) => {
+					return Promise.resolve(response.data)
+				},
+				(err) => {
+					return Promise.reject(err)
+				},
+			)
+			.catch((err) => {
+				return Promise.reject(err)
+			})
+	}
+
+	/**
+	 * @param {*} category
+	 * @return {Promise<Category>}
+	 */
+	updateCategory(category) {
+		return axios.put(this.url(`/categories/${category.id}`), category)
+			.then(
+				(response) => {
+					return Promise.resolve(response.data)
+				},
+				(err) => {
+					return Promise.reject(err)
+				},
+			)
+			.catch((err) => {
+				return Promise.reject(err)
+			})
+	}
+
+	/**
+	 * @param {*} category
+	 * @return {Promise<void>}
+	 */
+	deleteCategory(category) {
+		return axios.delete(this.url(`/categories/${category.id}`), category)
+			.then(
+				() => {
+					return Promise.resolve()
+				},
+				(err) => {
+					return Promise.reject(err)
+				},
+			)
+			.catch((err) => {
+				return Promise.reject(err)
+			})
+	}
+
 }

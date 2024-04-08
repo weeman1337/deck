@@ -42,14 +42,22 @@
 				</template>
 			</AppNavigationBoardCategory>
 			<AppNavigationBoardCategory v-for="category in nonArchivedBoardCategories"
-				:id="`deck-navigation-cat-${category}`"
-				:key="category"
-				:to="`/board/category/${urlEncode(category)}`"
-				:text="category"
-				:boards="nonArchivedBoardsByCategory[category]"
+				:id="`deck-navigation-cat-${category.id}`"
+				:key="category.id"
+				:to="`/board/category/${urlEncode(category.id)}`"
+				:text="category.title"
+				:boards="nonArchivedBoardsByCategory[category.id]"
 				icon="icon-deck">
 				<template #icon>
-					<DeckIcon :size="16" />
+					<DeckIcon :fill-color="category.color ? `#${category.color}` : 'currentColor'"
+						:size="16" />
+				</template>
+				<template #actions>
+					<NcActionButton @click="handleEditCategory(category)">
+						<template #icon>
+							<Pencil :size="20" />
+						</template>
+					</NcActionButton>
 				</template>
 			</AppNavigationBoardCategory>
 			<AppNavigationBoardCategory id="deck-navigation-archived"
@@ -124,6 +132,9 @@
 					</p>
 				</div>
 			</NcAppNavigationSettings>
+			<EditCategoryModal v-if="editCategory"
+				:category="editCategory"
+				@close="handleEditCategoryClose()" />
 		</template>
 	</NcAppNavigation>
 </template>
@@ -132,7 +143,7 @@
 import axios from '@nextcloud/axios'
 import { mapGetters } from 'vuex'
 import ClickOutside from 'vue-click-outside'
-import { NcAppNavigation, NcAppNavigationItem, NcAppNavigationSettings, NcMultiselect, NcButton } from '@nextcloud/vue'
+import { NcAppNavigation, NcAppNavigationItem, NcAppNavigationSettings, NcMultiselect, NcButton, NcActionButton } from '@nextcloud/vue'
 import AppNavigationAddBoard from './AppNavigationAddBoard.vue'
 import AppNavigationBoardCategory from './AppNavigationBoardCategory.vue'
 import { loadState } from '@nextcloud/initial-state'
@@ -144,6 +155,8 @@ import DeckIcon from './../icons/DeckIcon.vue'
 import ShareVariantIcon from 'vue-material-design-icons/Share.vue'
 import HelpModal from './../modals/HelpModal.vue'
 import { subscribe } from '@nextcloud/event-bus'
+import Pencil from 'vue-material-design-icons/Pencil.vue'
+import EditCategoryModal from './../modals/EditCategoryModal.vue'
 
 const canCreateState = loadState('deck', 'canCreate')
 
@@ -162,6 +175,9 @@ export default {
 		DeckIcon,
 		ShareVariantIcon,
 		HelpModal,
+		Pencil,
+		NcActionButton,
+		EditCategoryModal,
 	},
 	directives: {
 		ClickOutside,
@@ -180,6 +196,7 @@ export default {
 			groupLimitDisabled: true,
 			canCreate: canCreateState,
 			showHelp: false,
+			editCategory: null,
 		}
 	},
 	computed: {
@@ -254,6 +271,12 @@ export default {
 		},
 		urlEncode(value) {
 			return encodeURIComponent(value)
+		},
+		handleEditCategory(category) {
+			this.editCategory = category
+		},
+		handleEditCategoryClose() {
+			this.editCategory = null
 		},
 	},
 }

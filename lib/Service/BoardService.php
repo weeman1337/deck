@@ -367,7 +367,7 @@ class BoardService {
 	 * @throws \OCP\AppFramework\Db\MultipleObjectsReturnedException
 	 * @throws BadRequestException
 	 */
-	public function update($id, $title, $color, $archived, $category) {
+	public function update($id, $title, $color, $archived, $categoryId) {
 		$this->boardServiceValidator->check(compact('id', 'title', 'color', 'archived'));
 
 		$this->permissionService->checkPermission($this->boardMapper, $id, Acl::PERMISSION_MANAGE);
@@ -376,7 +376,7 @@ class BoardService {
 		$board->setTitle($title);
 		$board->setColor($color);
 		$board->setArchived($archived);
-		$board->setCategory(empty($category) ? null : $category);
+		$board->setCategoryId(empty($categoryId) ? null : $categoryId);
 		$changes->setAfter($board);
 		$this->boardMapper->update($board); // operate on clone so we can check for updated fields
 		$this->boardMapper->mapOwner($board);
