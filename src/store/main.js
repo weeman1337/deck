@@ -44,6 +44,7 @@ export const BOARD_FILTERS = {
 	ALL: '',
 	ARCHIVED: 'archived',
 	SHARED: 'shared',
+	CATEGORY: 'category',
 }
 
 export default new Vuex.Store({
@@ -156,12 +157,12 @@ export default new Vuex.Store({
 		},
 		filteredBoards: state => {
 			const boards = state.boards.filter(board => {
-				return (state.boardFilter === BOARD_FILTERS.ALL && !board.category && board.archived === false)
+				return (state.boardFilter === BOARD_FILTERS.ALL && board.categoryId === null && board.archived === false)
 					|| (state.boardFilter === BOARD_FILTERS.ARCHIVED && board.archived === true)
 					|| (state.boardFilter === BOARD_FILTERS.SHARED && board.shared === 1)
 					|| (state.boardFilter === BOARD_FILTERS.CATEGORY
 						&& board.archived === false
-						&& board.category === state.boardFilterCategory)
+						&& (board.category === state.boardFilterCategory || (board.categoryId + '') === state.boardFilterCategory))
 			})
 			return boards
 		},

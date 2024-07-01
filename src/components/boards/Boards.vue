@@ -67,6 +67,8 @@ export default {
 			return [...this.filteredBoards].sort((a, b) => (a.title < b.title) ? -1 : 1)
 		},
 		filteredBoards() {
+			this.$store.commit('setBoardFilter', this.navFilter)
+			this.$store.commit('setBoardFilterCategory', this.navFilterCategory)
 			const query = this.$store.getters.getSearchQuery
 			return this.$store.getters.filteredBoards.filter((board) => {
 				return board.deletedAt <= 0 && board.title.toLowerCase().includes(query.toLowerCase())
